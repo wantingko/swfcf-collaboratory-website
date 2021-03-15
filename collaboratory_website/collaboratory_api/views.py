@@ -1,4 +1,7 @@
+from django.contrib.auth import login
 from django.shortcuts import render
+from django.urls import reverse
+from collaboratory_api.forms import CustomUserCreationForm
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -124,3 +127,21 @@ def users_detail(request, pk):
     elif request.method == 'DELETE':
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# dashboard render
+def dashboard(request):
+    return render(request, "collaboratory_api/dashboard.html")
+
+#user registration
+def register(request):
+    if request.method == "GET":
+        return render(
+            request, "collaboratory_api/register.html",
+            {"form": CustomUserCreationForm}
+        )
+    elif request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(reverse("dashboard"))

@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework import routers
 from . import views
+#login
+from django.conf.urls import url
+from collaboratory_api.views import dashboard, register
 
 router = routers.DefaultRouter()
 router.register(r'regions', views.RegionViewSet)
@@ -24,5 +27,8 @@ urlpatterns = [
     re_path(r'^organizations/([0-9])$', views.organizations_detail),
     re_path(r'^users/$', views.users_list),
     re_path(r'^users/([0-9])$', views.users_detail),
+    url(r"^accounts/", include("django.contrib.auth.urls")),
+    url(r"^dashboard/", dashboard, name="dashboard"),
+    url(r"^register/", register, name="register"),
 ]
 
